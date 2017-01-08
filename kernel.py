@@ -24,6 +24,8 @@ target = observation.target
 print("Target columns: {}".format(target.columns))
 
 while True:
+    """Iterate over data."""
+
     # Check timestamp
     timestamp = observation.features["timestamp"][0]
     if not timestamp % 100:
@@ -34,6 +36,8 @@ while True:
 
     # Submit predicted target, and get back updated observation
     observation, reward, done, info = env.step(target)
+
+    # Done?
     if done:
         print("Public score: {}".format(info["public_score"]))
         break
