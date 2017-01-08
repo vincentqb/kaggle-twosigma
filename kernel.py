@@ -3,44 +3,44 @@ import kagglegym
 # import pandas as pd
 
 
-def make_prediction(observation):
+def make_prediction(obs):
     """Make prediction."""
-    target = observation.target
+    target = obs.target
     return target
 
 
 # Interface for code competition
 env = kagglegym.make()
 
-# Get initial observation
-observation = env.reset()
+# Get initial obs
+obs = env.reset()
 
 # Load train dataset
-train = observation.train
+train = obs.train
 print("Train has {} rows".format(len(train)))
 
 # Template target to predict
-target = observation.target
+target = obs.target
 print("Target columns: {}".format(target.columns))
 
 # Excluse some columns
 # print(dir(env))
 excl = [env.ID_COL_NAME, env.SAMPLE_COL_NAME, env.TARGET_COL_NAME, env.TIME_COL_NAME]
-col = [c for c in observation.train.columns if c not in excl]
+col = [c for c in obs.train.columns if c not in excl]
 
 while True:
     """Iterate over data."""
 
     # Check timestamp
-    timestamp = observation.features["timestamp"][0]
+    timestamp = obs.features["timestamp"][0]
     if not timestamp % 100:
         print("Timestamp: {}".format(timestamp))
 
     # Make prediction
-    target = make_prediction(observation)
+    target = make_prediction(obs)
 
-    # Submit predicted target, and get back updated observation
-    observation, reward, done, info = env.step(target)
+    # Submit predicted target, and get back updated obs
+    obs, reward, done, info = env.step(target)
 
     # Done?
     if done:
