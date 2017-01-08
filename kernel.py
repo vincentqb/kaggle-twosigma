@@ -23,6 +23,11 @@ print("Train has {} rows".format(len(train)))
 target = observation.target
 print("Target columns: {}".format(target.columns))
 
+# Excluse some columns
+# print(dir(env))
+excl = [env.ID_COL_NAME, env.SAMPLE_COL_NAME, env.TARGET_COL_NAME, env.TIME_COL_NAME]
+col = [c for c in observation.train.columns if c not in excl]
+
 while True:
     """Iterate over data."""
 
