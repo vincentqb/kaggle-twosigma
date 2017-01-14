@@ -25,8 +25,9 @@ print("Target columns: {}".format(target.columns))
 
 # Excluse some columns
 # print(dir(env))
-excl = [env.ID_COL_NAME, env.SAMPLE_COL_NAME, env.TARGET_COL_NAME, env.TIME_COL_NAME]
-col = [c for c in obs.train.columns if c not in excl]
+# excl = [env.ID_COL_NAME, env.SAMPLE_COL_NAME, env.TARGET_COL_NAME, env.TIME_COL_NAME]
+# excl = ['id', 'sample', 'y', 'timestamp']
+# col = [c for c in obs.train.columns if c not in excl]
 
 while True:
     """Iterate over data."""
