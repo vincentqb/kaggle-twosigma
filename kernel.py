@@ -26,13 +26,15 @@ def remove_outliers(col):
 
 class Model():
 
-    def __init__(self, cols):
+    def __init__(self):
         """Select model to run"""
 
         from sklearn.linear_model import LinearRegression
         self.model = LinearRegression()
 
-        self.cols = cols
+        self.cols = ['fundamental_23', 'fundamental_37', 'technical_19', 'technical_27']
+        self.y_min = -0.0380067
+        self.y_max = 0.0380636
 
     def clip(self, col):
         """Clip values outside of [y_min, y_max]."""
