@@ -88,7 +88,7 @@ class Model():
         features.fillna(self.mean_values, inplace=True)
         target = self.model.predict(features)
         # target = self.clip(target)
-        target = pd.DataFrame({'y': target[0], 'id': obs.features['id']})
+        target = pd.DataFrame({'y': target, 'id': obs.features['id']})
         return target
 
 
