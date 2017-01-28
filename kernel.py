@@ -32,8 +32,7 @@ class Model():
         from sklearn.linear_model import LinearRegression
         self.model = LinearRegression()
 
-        excl = [env.ID_COL_NAME, env.SAMPLE_COL_NAME, env.TARGET_COL_NAME, env.TIME_COL_NAME]
-        # excl = ['id', 'sample', 'y', 'timestamp']
+        excl = ['id', 'sample', 'y', 'timestamp']
         self.cols = [c for c in obs.features.columns if c not in excl]
 
         # self.cols = ['fundamental_23', 'fundamental_37', 'technical_19', 'technical_27']
@@ -100,6 +99,9 @@ class Model():
 
 # Interface for code competition
 env = kagglegym.make()
+# Get column names
+# excl = [env.ID_COL_NAME, env.SAMPLE_COL_NAME,
+#         env.TARGET_COL_NAME, env.TIME_COL_NAME]
 # Get initial observations
 obs = env.reset()
 
