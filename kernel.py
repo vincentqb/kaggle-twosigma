@@ -88,7 +88,6 @@ class Model():
 
     def predict(self, features):
         """Make prediction."""
-        # features = obs.features[self.cols]
         features = features[self.cols]
         features.fillna(self.mean_values, inplace=True)
         target = self.model.predict(features)
