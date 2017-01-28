@@ -40,7 +40,7 @@ class Model():
         # self.cols = ['fundamental_23'] # -0.0029627241405782616
         # self.cols = ['fundamental_37'] # -0.004656196123714797
         # self.cols = ['technical_19'] # 0.006625206966729358
-        # self.cols = ['technical_27'] # 0.00775421908968341
+        self.cols = ['technical_27'] # 0.00775421908968341
         # self.cols = ['technical_19', 'technical_27'] # -0.0038563192572963526
         self.y_min = -0.0380067
         self.y_max = 0.0380636
@@ -74,6 +74,8 @@ class Model():
         self.y_max = max(target)
 
         # Fill missing values
+        # https://www.kaggle.com/c/two-sigma-financial-modeling/discussion/26205
+        features.dropna(how='all', axis=1, inplace=True)
         self.mean_values = features.mean(axis=0)
 
         # Fit model
@@ -98,7 +100,7 @@ class Model():
 
 # Interface for code competition
 env = kagglegym.make()
-# Get initial obs
+# Get initial observations
 obs = env.reset()
 
 # Create model and run initial fit
