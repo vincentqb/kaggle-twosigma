@@ -1,6 +1,6 @@
 import kagglegym
 import numpy as np
-# import pandas as pd
+import pandas as pd
 
 
 def remove_outliers(col):
@@ -32,6 +32,10 @@ class Model():
         from sklearn.linear_model import LinearRegression
         self.model = LinearRegression()
 
+        excl = [env.ID_COL_NAME, env.SAMPLE_COL_NAME, env.TARGET_COL_NAME, env.TIME_COL_NAME]
+        # excl = ['id', 'sample', 'y', 'timestamp']
+        self.cols = [c for c in obs.features.columns if c not in excl]
+
         self.cols = ['fundamental_23', 'fundamental_37', 'technical_19', 'technical_27']
         self.y_min = -0.0380067
         self.y_max = 0.0380636
@@ -46,11 +50,14 @@ class Model():
 
         return col
 
-    def initial_fit(self, obs, target):
+    def initial_fit(self, obs):
         """Initial training."""
 
+        train = obs.train
+        target = train['y']
+
         # Keep only certain columns
-        obs = obs[self.cols]
+        features = train[self.cols]
 
         # Find and remove outliers in target
         # outliers = obs[remove_outliers(obs['y']).isnull()].index
@@ -62,25 +69,28 @@ class Model():
         self.y_max = max(target)
 
         # Fill missing values
-        self.mean_values = obs.mean(axis=0)
-        obs.fillna(self.mean_values, inplace=True)
+        self.mean_values = features.mean(axis=0)
 
         # Fit model
-        self.model.fit(obs, target)
+        self.fit(features, target)
 
-    def fit(self, obs, target):
+    def fit(self, features, target):
         """Further training."""
-        obs = obs[self.cols]
+        features = features[self.cols]
         # target = self.clip(target)
-        obs.fillna(self.mean_values, inplace=True)
-        self.model.fit(obs, target)
+        features.fillna(self.mean_values, inplace=True)
+        self.model.fit(features, target)
 
-    def predict(self, obs):
+    def predict(self, features):
         """Make prediction."""
-        obs = obs[self.cols]
-        obs.fillna(self.mean_values, inplace=True)
-        target = self.model.predict(obs)
+        # features = obs.features[self.cols]
+        features = features[self.cols]
+        features.fillna(self.mean_values, inplace=True)
+        target = self.model.predict(features)
         # target = self.clip(target)
+        # print(target)
+        # print(features['id'])
+        target = pd.DataFrame({'y': target[0], 'id': obs.features['id']})
         return target
 
 
@@ -91,23 +101,23 @@ env = kagglegym.make()
 obs = env.reset()
 
 # Load train dataset
-train = obs.train
-print("Train has {} rows".format(len(train)))
+# train = obs.train
+# print("Train columns: {}".format(train.columns))
+# print("Train shape: {}".format(train.shape))
+# train.set_index('id', inplace=True)
 
 # Template target to predict
-target = obs.target
-print("Target columns: {}".format(target.columns))
+# target = obs.target
+# target = train[['y']]
+# print("Target columns: {}".format(target.columns))
+# print("Target shape: {}".format(target.shape))
+# target.set_index('id', inplace=True)
 
-# Excluse some columns
-# print(dir(env))
-excl = [env.ID_COL_NAME, env.SAMPLE_COL_NAME,
-        env.TARGET_COL_NAME, env.TIME_COL_NAME]
-# excl = ['id', 'sample', 'y', 'timestamp']
-# col = [c for c in obs.train.columns if c not in excl]
+# print(obs.target)
 
 # Create model and run initial fit
 model = Model()
-model.initial_fit(train, target)
+model.initial_fit(obs)
 
 done = False
 # rewards = []
@@ -120,9 +130,10 @@ while not done:
         print("Timestamp: {}".format(timestamp))
 
     # Make prediction
-    target = model.predict(obs)
+    target = model.predict(obs.features)
 
     # Submit predicted target, and get back updated obs
+    # print(target)
     obs, reward, done, info = env.step(target)
 
     # Reinforcement
