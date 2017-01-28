@@ -115,7 +115,6 @@ while not done:
     target = model.predict(obs.features)
 
     # Submit predicted target, and get back updated obs
-    # print(target)
     obs, reward, done, info = env.step(target)
 
     # Reinforcement
