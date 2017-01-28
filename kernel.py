@@ -88,32 +88,14 @@ class Model():
         features.fillna(self.mean_values, inplace=True)
         target = self.model.predict(features)
         # target = self.clip(target)
-        # print(target)
-        # print(features['id'])
         target = pd.DataFrame({'y': target[0], 'id': obs.features['id']})
         return target
 
 
 # Interface for code competition
 env = kagglegym.make()
-
 # Get initial obs
 obs = env.reset()
-
-# Load train dataset
-# train = obs.train
-# print("Train columns: {}".format(train.columns))
-# print("Train shape: {}".format(train.shape))
-# train.set_index('id', inplace=True)
-
-# Template target to predict
-# target = obs.target
-# target = train[['y']]
-# print("Target columns: {}".format(target.columns))
-# print("Target shape: {}".format(target.shape))
-# target.set_index('id', inplace=True)
-
-# print(obs.target)
 
 # Create model and run initial fit
 model = Model()
