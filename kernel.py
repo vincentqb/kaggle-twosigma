@@ -36,12 +36,13 @@ class Model():
         excl = ['id', 'sample', 'y', 'timestamp']
         self.cols = [c for c in obs.features.columns if c not in excl]
 
-        # self.cols = ['fundamental_23', 'fundamental_37', 'technical_19', 'technical_27']
+        self.cols = ['fundamental_23', 'fundamental_37', 'technical_19', 'technical_27']  # -0.005043151736788824
         # self.cols = ['fundamental_23']  # -0.0029627241405782616
         # self.cols = ['fundamental_37']  # -0.004656196123714797
         # self.cols = ['technical_19']  # 0.006625206966729358
-        self.cols = ['technical_27']  # 0.00775421908968341
+        # self.cols = ['technical_27']  # 0.00775421908968341
         # self.cols = ['technical_19', 'technical_27'] # -0.0038563192572963526
+
         self.y_min = -0.0380067
         self.y_max = 0.0380636
 
