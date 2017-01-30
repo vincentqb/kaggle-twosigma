@@ -29,8 +29,9 @@ class Model():
     def __init__(self):
         """Select model to run"""
 
-        from sklearn.linear_model import LinearRegression
+        from sklearn.linear_model import LinearRegression, SGDRegressor
         self.model = LinearRegression()
+        # self.model = SGDRegressor(warm_start=True)
 
         excl = ['id', 'sample', 'y', 'timestamp']
         self.cols = [c for c in obs.features.columns if c not in excl]
@@ -110,24 +111,29 @@ model = Model()
 model.initial_fit(obs)
 
 done = False
-# rewards = []
+tot_reward, n_iter = 0, 0
 while not done:
     """Iterate over data."""
 
     # Check timestamp
     timestamp = obs.features["timestamp"][0]
-    if not timestamp % 100:
+    if not timestamp % 100 and n_iter > 0:
         print("Timestamp: {}".format(timestamp))
+        print("Reward: {}".format(tot_reward/n_iter))
 
     # Make prediction
     target = model.predict(obs.features)
 
     # Submit predicted target, and get back updated obs
-    obs, reward, done, info = env.step(target)
+    obs_new, reward, done, info = env.step(target)
+
+    tot_reward += reward
+    n_iter += 1
 
     # Reinforcement
     # Fit points that were predicted better?
-
-    # rewards.append(reward)
+    # if reward > max(tot_reward/n_iter):
+    #     model.fit(obs.features, target['y'])
+    obs = obs_new
 
 print("Public score: {}".format(info["public_score"]))
