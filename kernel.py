@@ -3,8 +3,8 @@ import numpy as np
 import pandas as pd
 
 
-def remove_outliers(col):
-    """Remove outliers from column."""
+def find_outliers(col):
+    """Find outliers in column."""
 
     # Ignore missing values
     col = col.dropna()
@@ -19,9 +19,9 @@ def remove_outliers(col):
     high = q_high + 1.5 * q_diff
 
     # Drop values outside range
-    col[(col > high) | (col < low)] = np.nan
+    ind = (col > high) | (col < low)
 
-    return col
+    return ind
 
 
 class Model():
@@ -64,13 +64,13 @@ class Model():
         features = train[self.cols]
 
         # Find and remove outliers in target
-        # outliers = obs[remove_outliers(obs['y']).isnull()].index
+        # outliers = find_outliers(target)
         # obs.drop(outliers, inplace=True)
         # target.drop(outliers, inplace=True)
 
         # Save min/max for clipping
-        self.y_min = min(target)
-        self.y_max = max(target)
+        # self.y_min = min(target)
+        # self.y_max = max(target)
 
         # Fill missing values
         # https://www.kaggle.com/c/two-sigma-financial-modeling/discussion/26205
@@ -83,7 +83,7 @@ class Model():
     def fit(self, features, target):
         """Further training."""
         features = features[self.cols]
-        # target = self.clip(target)
+        target = self.clip(target)
         features.fillna(self.mean_values, inplace=True)
         self.model.fit(features, target)
 
@@ -92,7 +92,7 @@ class Model():
         features = features[self.cols]
         features.fillna(self.mean_values, inplace=True)
         target = self.model.predict(features)
-        # target = self.clip(target)
+        target = self.clip(target)
         target = pd.DataFrame({'y': target, 'id': obs.features['id']})
         return target
 
