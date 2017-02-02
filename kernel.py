@@ -75,7 +75,6 @@ class Model():
         # self.y_max = max(target)
 
         # Fill missing values
-        # https://www.kaggle.com/c/two-sigma-financial-modeling/discussion/26205
         features.dropna(how='all', axis=1, inplace=True)
         self.mean_values = features.mean(axis=0)
 
