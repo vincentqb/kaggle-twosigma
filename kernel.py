@@ -19,9 +19,9 @@ def find_outliers(col):
     high = q_high + 1.5 * q_diff
 
     # Drop values outside range
-    ind = (col > high) | (col < low)
+    outliers = (col > high) | (col < low)
 
-    return ind
+    return df[outliers].index
 
 
 class Model():
